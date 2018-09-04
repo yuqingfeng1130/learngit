@@ -1,0 +1,47 @@
+
+关闭stp			关闭stp可提升网络接入速率
+			undo stp 
+			undo stp glo en
+
+DHCP地址池地址排除	dhcp server forbidden ip 172.23.32.1 172.23.32.20			
+						（初始地址） （结束地址）
+
+DHCP地址绑定		dhcp relay security static 10.11.80.4 1414-4b59-9737	（v5）
+						   (IP地址)   （MAC地址）
+
+arp地址固定		arp static 10.11.72.4 1414-4b59-9157 201 	GigabitEthernet2/0/6
+				     (IP地址)   （MAC地址）  vlan号	端口号
+
+telnet用户权限设置	user-interface aux 0
+(严谨型)		user-interface vty 0 4
+			set authentication password simple njau@))$
+			user-interface vty 5 15
+			super password simple njau552@))$
+			
+不需要super密码		user-interface vty 0 15
+(偷懒型)		user-role network-admin
+			set authentication password simple njau@))$
+			undo  user-role network-operator
+
+环路检测		[h3c-GigabitEthernet1/0/1]loopback-detection action ?
+ 			 block        Block mode		动作块（块模式）
+ 			 no-learning  No-learning mode	不学习，防止路由漂移
+  			 shutdown     Shutdown mode		关闭端口
+			[h3c-GigabitEthernet1/0/1]loopback-detection enable vlan ?
+  			 INTEGER<1-4094>  VLAN ID		启用VLAN号
+ 			 all              Specify all VLANs	启用所有VLAN
+
+dhcp信任与监控		1.上联口配置	dhcp-snooping trust
+			2.全局配置		dhcp-snooping		
+					dhcp-snooping en
+
+查看路由路径(交换机端)	tracert -a 10.11.70.1  172.16.0.16
+				   本地地址	目标地址
+
+
+dhcp中继v7		dhcp enable
+			interface Vlan-interface2
+ 			dhcp select relay
+ 			dhcp relay server-address 	202.195.241.27
+						dhcp服务器地址
+
